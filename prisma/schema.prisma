@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  bio           String?
+  age           Int?
+  gender        String?
+  location      String?
+  imgUrl        String?
+  clerk_id      String   @unique
+  created_on    DateTime @default(now())
+  updated_on    DateTime @updatedAt
+  matched       User[]   @relation("matchedUsers")
+  matchedUser   User?    @relation("matchedUsers", fields: [matchedUserId], references: [clerk_id])
+  matchedUserId String?
+
+  @@index([clerk_id])
+}
+
+
